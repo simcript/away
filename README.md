@@ -37,7 +37,7 @@ Once installed and configured, all incoming HTTP requests will be routed through
    ```php
    <?php
 
-namespace Hosts;
+namespace Services;
 
 use App\Service\ServiceName;
 
