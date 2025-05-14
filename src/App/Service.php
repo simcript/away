@@ -2,10 +2,6 @@
 
 namespace App;
 
-/**
- * This class development for run proxy application
- * @see https://github.com/simcript/proxy
- */
 abstract class Service
 {
 

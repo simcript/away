@@ -2,10 +2,6 @@
 
 namespace App;
 
-/**
- * this class development to create a response for requests
- * @see https://github.com/simcript/proxy
- */
 final class Response
 {
     private int $status;

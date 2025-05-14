@@ -5,10 +5,6 @@ namespace App;
 use CURLFILE;
 use CurlHandle;
 
-/**
- * this class development to send a curl request and parse response
- * @see https://github.com/simcript/proxy
- */
 final class Client
 {
     private false|CurlHandle $client;

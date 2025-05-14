@@ -1,10 +1,17 @@
 <?php
 
 loadEnv();
-debug(getenv('DEBUG'));
+debug(getenv('APP_DEBUG'));
 autoload();
 
-(new \App\Boot())->start();
+try {
+    (new \App\Boot())->start();
+} catch (\Throwable $th) {
+    if (getenv('APP_DEBUG') == 'true') {
+        $error = $th->getMessage() . $th->getTraceAsString();
+        dieError(404, $error, 500, $error);
+    }
+}
 exit();
 
 
@@ -47,9 +54,9 @@ function loadEnv(): void
     }
 }
 
-function debug($status = true): void
+function debug(string $status): void
 {
-    $status = $status ? '1' : '0';
+    $status = $status == 'true' ? '1' : '0';
     error_reporting(E_ERROR | E_PARSE);
     ini_set('display_errors', $status);
 }

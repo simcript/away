@@ -2,25 +2,14 @@
 
 namespace App;
 
-/**
- * This class development for run proxy application
- * @see https://github.com/simcript/proxy
- */
 final readonly class Boot
 {
     private Service $service;
 
     public function __construct()
     {
-        try {
-            $request = new Request();
-            $this->initService($request, $request->service);
-        } catch (\Throwable $th) {
-            if (getenv('APP_DEBUG') == 'true') {
-                $error = $th->getMessage() . $th->getTraceAsString();
-                dieError(404, $error, 500, $error);
-            }
-        }
+        $request = new Request();
+        $this->initService($request, $request->service);
     }
 
     public function start(): void

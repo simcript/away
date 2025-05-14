@@ -2,10 +2,6 @@
 
 namespace App;
 
-/**
- * this class development to create a incoming request object
- * @see https://github.com/simcript/proxy
- */
 final class Request
 {
     public string|array $data;
