@@ -1,21 +1,21 @@
 <?php
 
-loadEnv();
-debug(getenv('APP_DEBUG'));
-autoload();
-
 try {
+    define("ROOT_PATH", __DIR__);
+    envLoader(ROOT_PATH);
+    debug(getenv('APP.DEBUG'));
+    autoload();
+
     (new \App\Boot())->start();
 } catch (\Throwable $th) {
-    if (getenv('APP_DEBUG') == 'true') {
+    if (getenv('APP.DEBUG') == 'true') {
         $error = $th->getMessage() . $th->getTraceAsString();
         dieError(404, $error, 500, $error);
     }
 }
 exit();
 
-
-// general functions
+// helper functions
 
 function autoload(): void
 {
@@ -37,13 +37,13 @@ function autoload(): void
     });
 }
 
-function loadEnv(): void
+function envLoader(string $envDirectory): void
 {
-    $envPath = __DIR__ . '/.env';
-    if (!file_exists($envPath)) {
-        die('.env file not found. Create a environment file(.env) similar to .env.example file.');
+    $envFilePath = $envDirectory . '/.env';
+    if (!file_exists($envFilePath)) {
+        dieError(500, '.env file not found. Create a environment file(.env) similar to .env.example file.');
     }
-    $env = file_get_contents($envPath);
+    $env = file_get_contents($envFilePath);
     $lines = explode(PHP_EOL, $env);
 
     foreach ($lines as $line) {
@@ -64,7 +64,7 @@ function debug(string $status): void
 function dd(...$args): void
 {
     highlight_string("<?php\n" . var_export($args, true) . ";\n?>");
-    exit;
+    exit();
 }
 
 function dieError(int $code, string $message, int $status = 500, string $logMessage = ''): void

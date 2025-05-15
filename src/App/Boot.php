@@ -9,7 +9,7 @@ final readonly class Boot
     public function __construct()
     {
         $request = new Request();
-        $this->initService($request, $request->service);
+        $this->initService($request);
     }
 
     public function start(): void
@@ -17,15 +17,19 @@ final readonly class Boot
         $this->service->run();
     }
 
-    private function initService(Request $request, string $service): void
+    private function initService(Request $request): void
     {
-        $className = $this->getServiceClass($service);
+        $className = $this->getServiceClass($request->getServiceName());
         if (!class_exists($className)) {
-            if (!class_exists($this->getServiceClass(getenv('APP_DEFAULT_SERVICE')))) {
+            $classNameSpace = $this->getServiceClass(
+                $request->getServiceName(getenv('APP.DEFAULT_SERVICE'))
+            );
+            if (!class_exists($classNameSpace)) {
                 $message = "Service ($className) not found!";
                 dieError(404, $message, 500, $message);
             } else {
-                $className = $this->getServiceClass(getenv('APP_DEFAULT_SERVICE'));
+                $request->service = getenv('APP.DEFAULT_SERVICE');
+                $className = $classNameSpace;
             }
         }
         $class = new $className($request);
@@ -36,10 +40,8 @@ final readonly class Boot
         $this->service = $class;
     }
 
-    private function getServiceClass(string $service): string
+    private function getServiceClass(string $serviceName): string
     {
-        $serviceName = ucfirst(strtolower($service));
         return "Services\\$serviceName\\{$serviceName}Service";
     }
-
 }

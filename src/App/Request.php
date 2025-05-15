@@ -26,6 +26,11 @@ final class Request
         $this->fetchHeaders();
     }
 
+    public function getServiceName(?string $service = null): string
+    {
+        return ucfirst(strtolower($service ?? $this->service));
+    }
+
     private function fetchData(): void
     {
         $this->data = file_get_contents('php://input');
@@ -57,10 +62,12 @@ final class Request
 
     private function fetchUrl(array $info): void
     {
-        $urlSection = explode('/', ($info['REQUEST_URI'] ?? ''));
-        $this->service = $urlSection[0];
-        unset($urlSection[0]);
-        $path = implode('/', $urlSection);
+        $uri = trim(($info['REQUEST_URI'] ?? ''), '/');
+
+        $uriSections = explode('/', $uri);
+        $this->service = $uriSections[0];
+        unset($uriSections[0]);
+        $path = implode('/', $uriSections);
 
         $path = str_replace($this->query, '', $path);
         $this->url = trim($path, '?');

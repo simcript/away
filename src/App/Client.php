@@ -88,11 +88,15 @@ final class Client
         return $this;
     }
 
-    public function setRedirect(int $max = 5, array $protocols = ['http', 'https'], bool|string $referer = false): Client
+    public function setOption(int $option, mixed $value)
+    {
+        $this->options[$option] = $value;
+    }
+
+    public function setRedirect(int $max = 5, bool|string $referer = false): Client
     {
         $this->options[CURLOPT_MAXREDIRS] = $max;
         $this->options[CURLOPT_FOLLOWLOCATION] = $max > 0;
-//        $this->options[CURLOPT_REDIR_PROTOCOLS] = $protocols;
         if (!empty($referer)) {
             $this->options[CURLOPT_REFERER] = $referer;
         }
@@ -105,10 +109,10 @@ final class Client
         $this->options[CURLOPT_CUSTOMREQUEST] = strtoupper($method);
         $this->options[CURLOPT_POSTFIELDS] = $this->data;
         $this->options[CURLOPT_HTTPHEADER] = $this->headerGenerator();
-        $this->options[CURLOPT_RETURNTRANSFER] = 1;
-        $this->options[CURLOPT_HEADER] = 1;
-        $this->options[CURLOPT_HTTP_VERSION] = CURL_HTTP_VERSION_1_1;
-        $this->options[CURLOPT_USERAGENT] = $this->headers['User-Agent'] ?? '';
+        $this->options[CURLOPT_RETURNTRANSFER] ??= 1;
+        $this->options[CURLOPT_HEADER] ??= 1;
+        $this->options[CURLOPT_HTTP_VERSION] ??= CURL_HTTP_VERSION_1_1;
+        $this->options[CURLOPT_USERAGENT] ??= $this->headers['User-Agent'] ?? '';
         foreach ($this->options as $option => $value) {
             curl_setopt($this->client, $option, $value);
         }

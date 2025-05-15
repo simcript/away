@@ -21,14 +21,29 @@ final class Response
         $this->dictionary[$key] = $value;
     }
 
-    public function emit(): void
+    public function addHeader(string $key, mixed $value): void
     {
-        $this->setStatus();
-        $this->setHeaders();
-        $this->setBody();
+        $this->headers[$key] = $value;
     }
 
-    private function setHeaders(): void
+    public function setBody(string $body)
+    {
+        $this->body = $body;
+    }
+
+    public function setStatus(int $status)
+    {
+        $this->status = $status;
+    }
+
+    public function emit(): void
+    {
+        $this->applyStatus();
+        $this->applyHeaders();
+        $this->applyBody();
+    }
+
+    private function applyHeaders(): void
     {
         foreach ($this->headers as $key => $value) {
             if (empty($value)) {
@@ -40,12 +55,12 @@ final class Response
         }
     }
 
-    private function setBody(): void
+    private function applyBody(): void
     {
         echo $this->translate($this->body);
     }
 
-    private function setStatus(): void
+    private function applyStatus(): void
     {
         http_response_code($this->status);
     }

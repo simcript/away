@@ -9,20 +9,25 @@ abstract class Service
     protected Response $response;
 
     public function __construct(
-        protected readonly Request $request
+        protected readonly Request $request,
+        bool $loadEnv = false
     )
     {
+        if ($loadEnv) {
+            envLoader(ROOT_PATH . '/src/Services/' . $this->request->getServiceName());
+        }
+
         $this->client = new Client($this->getDomain());
     }
 
     final public function run(): void
     {
         $route = $this->getRoute($this->request->url);
-        if (method_exists($this, $route)) {
-            $this->$route();
-        } else {
+        if (is_string($route)) {
             $this->sendRequest($route);
             $this->echoResult();
+        } else {
+            $route();
         }
     }
 
@@ -60,7 +65,7 @@ abstract class Service
         $this->client->send($this->request->method);
     }
 
-    private function initResponse(): void
+    private function initResponse(): Response
     {
         $result = $this->client->result();
         $headers = [];
@@ -68,14 +73,14 @@ abstract class Service
             if (str_contains($key, '-Encoding')) continue;
             $headers[$key] = $value;
         }
-        $this->response = new Response($result['status'], $headers,
+        return new Response($result['status'], $headers,
             $result['error']['code'] > 0 ? $result['error']['message'] : $result['body']
         );
     }
 
     private function echoResult(): void
     {
-        $this->initResponse();
+        $this->response = $this->initResponse();
         $this->preparingResponse();
         $this->response->emit();
     }
@@ -89,9 +94,9 @@ abstract class Service
     /**
      * Returns the corresponding route of a URL
      * @param string $url
-     * @return string
+     * @return string|\Closure
      */
-    abstract public function getRoute(string $url): string;
+    abstract public function getRoute(string $url): string|\Closure;
 
     /**
      * check is allowed header

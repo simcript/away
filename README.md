@@ -2,11 +2,12 @@
 
 ## PHP Application Gateway
 
-**aWay** is a simple, fast and open-source gateway system developed in PHP. It acts as a central entry point for routing requests to multiple backend services or applications, enabling better control, security, and scalability for your architecture.
+**aWay** is a lightweight, fast and open-source gateway system developed in PHP. It acts as a central entry point for routing requests to multiple backend services or applications, enabling better control, security, and scalability for your architecture.
 
 ## Features
 
 * Lightweight and easy to configure
+* Fast and flexible to achieve the goal
 * Built entirely with PHP so it runs at minimal cost
 * Supports routing to multiple backend services
 * Customizable request handling and logging(soon)
