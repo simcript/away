@@ -26,14 +26,14 @@
    git clone https://github.com/simcript/away.git
    ```
 
-2. Configure your routes and services in the `src/Services/` folder.
+2. Configure your routes and services in the `services/` directory.
 
 ## Usage
 
 Once installed and configured, all incoming HTTP requests will be routed through the gateway and forwarded to the appropriate backend service.
 
 > Create a directory with service name (similar Base Service)
-> Define a class within the `src/Services/{ServiceName}` directory following the provided example structure, and implement the required methods based on your application's specific needs.
+> Define a class within the `services/{ServiceName}` directory following the provided example structure, and implement the required methods based on your application's specific needs.
 
    ```php
    <?php
@@ -51,7 +51,7 @@ final class Foo extends Service
      */
     public function getDomain(): string
     {
-        return 'https://foo.example.com';
+        return 'https://foo.bar.url';
     }
 
     /**
@@ -82,6 +82,11 @@ final class Foo extends Service
 
 }
    ```
+
+## Update
+Run following command
+``git pull``
+Or Download ``app`` directory and replace files.
 
 ## Contributing
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace Src;
 
 abstract class Service
 {
@@ -14,7 +14,7 @@ abstract class Service
     )
     {
         if ($loadEnv) {
-            envLoader(ROOT_PATH . '/src/Services/' . $this->request->getServiceName());
+            envLoader(ROOT_PATH . 'services' . DIRECTORY_SEPARATOR . $this->request->getServiceName());
         }
 
         $this->client = new Client($this->getDomain());

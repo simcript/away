@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace Src;
 
 final readonly class Boot
 {

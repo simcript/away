@@ -2,8 +2,8 @@
 
 namespace Services\Base;
 
-use App\Request;
-use App\Service;
+use src\Request;
+use src\Service;
 
 final class BaseService extends Service
 {

@@ -1,40 +1,35 @@
 <?php
+/**
+ * helper functions
+ * @return void
+ */
 
-try {
-    define("ROOT_PATH", __DIR__);
-    envLoader(ROOT_PATH);
-    debug(getenv('APP.DEBUG'));
-    autoload();
-
-    (new \App\Boot())->start();
-} catch (\Throwable $th) {
-    if (getenv('APP.DEBUG') == 'true') {
-        $error = $th->getMessage() . $th->getTraceAsString();
-        dieError(404, $error, 500, $error);
-    }
-}
-exit();
-
-// helper functions
 
 function autoload(): void
 {
     spl_autoload_register(function ($class) {
         try {
-            $file = str_replace('\\', DIRECTORY_SEPARATOR, $class) . '.php';
-            $file = __DIR__ . '/src/' . $file;
-            $file = str_replace(DIRECTORY_SEPARATOR . DIRECTORY_SEPARATOR, DIRECTORY_SEPARATOR, $file);
-            if (file_exists($file)) {
-                require_once $file;
+            if (requireClass($class, APP_PATH) || requireClass($class, ROOT_PATH)) {
                 return true;
             }
-            error_log("File class not found " . $file);
+            error_log("Class $class not found");
             return false;
         } catch (\Throwable $th) {
             error_log('Error in load class ' . $th->getMessage());
             return false;
         }
     });
+}
+
+function requireClass(string $class, string $basePath): bool
+{
+    $file = $basePath . str_replace('\\', DIRECTORY_SEPARATOR, $class) . '.php';
+    $file = str_replace(DIRECTORY_SEPARATOR . DIRECTORY_SEPARATOR, DIRECTORY_SEPARATOR, $file);
+    if (file_exists($file)) {
+        require_once $file;
+        return true;
+    }
+    return false;
 }
 
 function envLoader(string $envDirectory): void
